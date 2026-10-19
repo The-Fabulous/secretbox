@@ -5,6 +5,12 @@
 __pycache__/
 *.pyc
 *.pyo
+.venv/
+users.db
+analytics_cache.json
+
+# Java build output
+price-updater/out/
 
 # Временные файлы ОС
 .DS_Store

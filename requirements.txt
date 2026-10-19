@@ -1,8 +1,5 @@
 fastapi
 uvicorn
-streamlit
-pandas
-requests
-python-dotenv
 bcrypt
 PyJWT
+pydantic
