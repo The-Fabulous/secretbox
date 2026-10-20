@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
+import { CATEGORIES, categorize, getCategory } from './categories';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
@@ -15,6 +16,36 @@ function formatDate(value) {
     : date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
 }
 
+function getGreeting(date = new Date()) {
+  const hour = date.getHours();
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// Имя пользователя лежит внутри токена (JWT), поэтому оно не пропадает после обновления страницы.
+function usernameFromToken(token) {
+  try {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const bytes = Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes)).sub || '';
+  } catch {
+    return '';
+  }
+}
+
+function compareItems(a, b, key) {
+  if (key === 'name') return a.name.localeCompare(b.name);
+  if (key === 'size') {
+    // Напитки без указанного объёма всегда в конце списка.
+    if (!a.size_ml && !b.size_ml) return 0;
+    if (!a.size_ml) return 1;
+    if (!b.size_ml) return -1;
+    return a.size_ml - b.size_ml;
+  }
+  return Number(a.price) - Number(b.price);
+}
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [authMode, setAuthMode] = useState('login');
@@ -28,6 +59,8 @@ function App() {
   const [menuError, setMenuError] = useState('');
   const [activeView, setActiveView] = useState('catalog');
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('all');
+  const [sort, setSort] = useState({ key: '', dir: 'asc' });
   const [manualText, setManualText] = useState('');
   const [savingMenu, setSavingMenu] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('');
@@ -48,6 +81,8 @@ function App() {
     setAnalytics([]);
     setAnalyticsLoading(false);
     setChatMessages([]);
+    setCategory('all');
+    setSort({ key: '', dir: 'asc' });
     setActiveView('catalog');
   }
 
@@ -133,10 +168,53 @@ function App() {
     };
   }, [token, activeView]);
 
+  // Каждому напитку добавляем категорию, определённую по названию (см. categories.js).
+  const categorizedItems = useMemo(
+    () => (menu.items || []).map((item) => ({ ...item, category: categorize(item.name) })),
+    [menu.items],
+  );
+
+  // Сколько напитков в каждой категории — показываем только те, что есть в меню этой кофейни.
+  const categoryCounts = useMemo(() => {
+    const counts = {};
+    categorizedItems.forEach((item) => { counts[item.category] = (counts[item.category] || 0) + 1; });
+    return counts;
+  }, [categorizedItems]);
+
+  const availableCategories = CATEGORIES.filter((entry) => categoryCounts[entry.id]);
+  // Если выбранной категории нет в меню новой кофейни, показываем «All».
+  const activeCategory = category === 'all' || categoryCounts[category] ? category : 'all';
+
   const visibleItems = useMemo(() => {
     const query = search.trim().toLocaleLowerCase();
-    return (menu.items || []).filter((item) => item.name.toLocaleLowerCase().includes(query));
-  }, [menu.items, search]);
+    const filtered = categorizedItems.filter((item) => (
+      (activeCategory === 'all' || item.category === activeCategory)
+      && item.name.toLocaleLowerCase().includes(query)
+    ));
+    if (!sort.key) return filtered;
+    const factor = sort.dir === 'desc' ? -1 : 1;
+    return [...filtered].sort((a, b) => {
+      const result = compareItems(a, b, sort.key);
+      const sizeMissing = sort.key === 'size' && (!a.size_ml || !b.size_ml);
+      return sizeMissing ? result : result * factor;
+    });
+  }, [categorizedItems, activeCategory, search, sort]);
+
+  function toggleSort(key) {
+    // Клик по заголовку: по возрастанию → по убыванию → исходный порядок меню.
+    setSort((current) => {
+      if (current.key !== key) return { key, dir: 'asc' };
+      if (current.dir === 'asc') return { key, dir: 'desc' };
+      return { key: '', dir: 'asc' };
+    });
+  }
+
+  function sortState(key) {
+    if (sort.key !== key) return 'none';
+    return sort.dir === 'asc' ? 'ascending' : 'descending';
+  }
+
+  const displayName = username || usernameFromToken(token);
 
   async function submitAuth(event) {
     event.preventDefault();
@@ -294,7 +372,7 @@ function App() {
           <span>secretbox<span className="brand-period">.</span></span>
         </a>
         <div className="topbar-right">
-          <span className="user-chip"><span className="user-dot" />{username || 'Cafe team'}</span>
+          <span className="user-chip"><span className="user-dot" />{displayName || 'Cafe team'}</span>
           <button className="button button-quiet sign-out" onClick={logout}>Sign out <span aria-hidden="true">↗</span></button>
         </div>
       </header>
@@ -303,7 +381,7 @@ function App() {
         <section className="welcome-row">
           <div>
             <p className="eyebrow">CAFE MENU INTELLIGENCE</p>
-            <h1>Good afternoon<span className="heading-period">.</span></h1>
+            <h1>{getGreeting()}{displayName ? `, ${displayName}` : ''}<span className="heading-period">.</span></h1>
             <p className="welcome-subtitle">A clear look at the drinks, sizes and prices on your watch.</p>
           </div>
           <div className="coffee-stamp" aria-hidden="true">
@@ -371,6 +449,7 @@ function App() {
                       setMenuError('');
                       setSelectedShop(shop);
                       setSearch('');
+                      setCategory('all');
                       setUpdateMessage('');
                     }}
                   >
@@ -385,7 +464,12 @@ function App() {
                 <div className="menu-toolbar">
                   <div>
                     <h3>{selectedShop || 'Select a cafe'}</h3>
-                    <p>{menu.items.length} drinks <span className="small-divider">·</span> Updated {formatDate(menu.updated_at)}</p>
+                    <p>
+                      {visibleItems.length === menu.items.length
+                        ? `${menu.items.length} drinks`
+                        : `${visibleItems.length} of ${menu.items.length} drinks`}
+                      <span className="small-divider">·</span> Updated {formatDate(menu.updated_at)}
+                    </p>
                   </div>
                   <label className="search-field">
                     <span aria-hidden="true">⌕</span>
@@ -399,22 +483,69 @@ function App() {
                 </div>
                 {menuError && <p className="notice notice-error" role="alert">{menuError}</p>}
                 {updateMessage && <p className="notice notice-success" role="status">{updateMessage}</p>}
+                {!menuLoading && availableCategories.length > 0 && (
+                  <div className="category-bar" role="group" aria-label="Filter drinks by category">
+                    <button
+                      type="button"
+                      className={activeCategory === 'all' ? 'category-chip active' : 'category-chip'}
+                      aria-pressed={activeCategory === 'all'}
+                      onClick={() => setCategory('all')}
+                    >
+                      All <span className="chip-count">{menu.items.length}</span>
+                    </button>
+                    {availableCategories.map((entry) => (
+                      <button
+                        type="button"
+                        key={entry.id}
+                        className={activeCategory === entry.id ? 'category-chip active' : 'category-chip'}
+                        style={{ '--chip-color': entry.color }}
+                        aria-pressed={activeCategory === entry.id}
+                        onClick={() => setCategory(entry.id)}
+                      >
+                        <span className="chip-dot" />{entry.label} <span className="chip-count">{categoryCounts[entry.id]}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {menuLoading ? (
                   <div className="loading-state"><span className="spinner" /> Loading menu...</div>
                 ) : (
                   <div className="table-wrap">
                     <table className="menu-table">
-                      <thead><tr><th>DRINK</th><th>VOLUME</th><th className="price-heading">PRICE</th></tr></thead>
+                      <thead>
+                        <tr>
+                          <th aria-sort={sortState('name')}>
+                            <button type="button" className="sort-button" onClick={() => toggleSort('name')}>
+                              DRINK <span className="sort-arrow" aria-hidden="true">{sort.key === 'name' ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'}</span>
+                            </button>
+                          </th>
+                          <th className="col-category">CATEGORY</th>
+                          <th aria-sort={sortState('size')}>
+                            <button type="button" className="sort-button" onClick={() => toggleSort('size')}>
+                              VOLUME <span className="sort-arrow" aria-hidden="true">{sort.key === 'size' ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'}</span>
+                            </button>
+                          </th>
+                          <th className="price-heading" aria-sort={sortState('price')}>
+                            <button type="button" className="sort-button" onClick={() => toggleSort('price')}>
+                              PRICE <span className="sort-arrow" aria-hidden="true">{sort.key === 'price' ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'}</span>
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
                       <tbody>
-                        {visibleItems.map((item, index) => (
-                          <tr key={`${item.name}-${item.size_ml}-${index}`}>
-                            <td><span className="drink-dot" />{item.name}</td>
-                            <td>{item.size_ml ? <span className="volume-pill">{item.size_ml} ml</span> : <span className="volume-missing">Not listed</span>}</td>
-                            <td className="price-cell">{Number(item.price).toLocaleString()} <span>₸</span></td>
-                          </tr>
-                        ))}
+                        {visibleItems.map((item, index) => {
+                          const itemCategory = getCategory(item.category);
+                          return (
+                            <tr key={`${item.name}-${item.size_ml}-${index}`}>
+                              <td><span className="drink-dot" style={{ background: itemCategory.color }} />{item.name}</td>
+                              <td className="col-category"><span className="category-tag" style={{ '--chip-color': itemCategory.color }}>{itemCategory.label}</span></td>
+                              <td>{item.size_ml ? <span className="volume-pill">{item.size_ml} ml</span> : <span className="volume-missing">Not listed</span>}</td>
+                              <td className="price-cell">{Number(item.price).toLocaleString()} <span>₸</span></td>
+                            </tr>
+                          );
+                        })}
                         {!visibleItems.length && !menuLoading && (
-                          <tr><td className="empty-row" colSpan="3">
+                          <tr><td className="empty-row" colSpan="4">
                             {menu.items.length ? 'No drinks match your search.' : 'This menu does not have any drinks yet.'}
                           </td></tr>
                         )}
