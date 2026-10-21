@@ -27,7 +27,8 @@ app = FastAPI(title="SecretBox Cafe Menu API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.environ.get(
-        "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,https://zhanaliber.github.io",
     ).split(","),
     allow_credentials=True,
     allow_methods=["*"],
