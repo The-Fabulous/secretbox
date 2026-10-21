@@ -3,3 +3,6 @@ uvicorn
 bcrypt
 PyJWT
 pydantic
+streamlit
+requests
+pandas
