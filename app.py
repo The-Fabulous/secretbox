@@ -1,96 +1,168 @@
+import os
+
+import pandas as pd
+import requests
 import streamlit as st
 
-import requests
-import pandas as pd
-import os
-# Настройка вкладки браузера
-st.set_page_config(
-    page_title="SECRETBOX", 
-    layout="wide"
+st.set_page_config(page_title="SECRETBOX", layout="wide")
+
+st.markdown(
+    """
+<style>
+.block-container { display: flex; flex-direction: column; align-items: center; }
+h1, h2, h3, .stMarkdown { text-align: center !important; }
+table { margin-left: auto !important; margin-right: auto !important; }
+div.stButton { text-align: center; }
+</style>
+""",
+    unsafe_allow_html=True,
 )
 
-# Глобальные стили: центрируем всё, включая таблицы и заголовки
-st.markdown("""
-    <style>
-    /* Центрирование основного контейнера */
-    .block-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    /* Центрирование заголовков и текста */
-    h1, h2, h3, .stMarkdown {
-        text-align: center !important;
-    }
-    /* Центрирование всех таблиц */
-    table {
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
-    /* Центрирование кнопок */
-    div.stButton {
-        text-align: center;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# Address of the backend. On Render this comes from the API_URL environment variable.
+API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000").rstrip("/")
 
-API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
+# Free Render servers can take ~50 seconds to wake up, so wait long enough.
+TIMEOUT = 90
 
-# Заголовок страницы
-st.markdown("<h1 style='text-align: center;'>☕ SECRETBOX 📦</h1>", unsafe_allow_html=True)
+if "token" not in st.session_state:
+    st.session_state.token = None
+
+
+def error_text(resp):
+    """Pull the readable 'detail' message out of an error response."""
+    try:
+        return resp.json().get("detail", resp.text)
+    except ValueError:
+        return resp.text
+
+
+def api_get(path):
+    """GET request that sends the login token, as the backend requires."""
+    resp = requests.get(
+        f"{API_URL}{path}",
+        headers={"Authorization": f"Bearer {st.session_state.token}"},
+        timeout=TIMEOUT,
+    )
+    if resp.status_code == 401:
+        # Token expired or invalid: forget it so the login form shows again.
+        st.session_state.token = None
+        st.warning("Сессия истекла. Обновите страницу и войдите снова.")
+        st.stop()
+    return resp
+
+
+def show_login():
+    st.header("Вход")
+    login_tab, register_tab = st.tabs(["Войти", "Регистрация"])
+
+    with login_tab:
+        with st.form("login_form"):
+            username = st.text_input("Имя пользователя")
+            password = st.text_input("Пароль", type="password")
+            submitted = st.form_submit_button("Войти")
+        if submitted:
+            try:
+                resp = requests.post(
+                    f"{API_URL}/login",
+                    json={"username": username, "password": password},
+                    timeout=TIMEOUT,
+                )
+                if resp.status_code == 200:
+                    st.session_state.token = resp.json()["token"]
+                    st.rerun()
+                else:
+                    st.error(error_text(resp))
+            except requests.RequestException as e:
+                st.error(f"Не удалось связаться с сервером: {e}")
+
+    with register_tab:
+        with st.form("register_form"):
+            new_username = st.text_input("Новое имя пользователя")
+            new_password = st.text_input("Новый пароль", type="password")
+            registered = st.form_submit_button("Создать аккаунт")
+        if registered:
+            try:
+                resp = requests.post(
+                    f"{API_URL}/register",
+                    json={"username": new_username, "password": new_password},
+                    timeout=TIMEOUT,
+                )
+                if resp.status_code == 200:
+                    st.success("Аккаунт создан. Теперь войдите на вкладке «Войти».")
+                else:
+                    st.error(error_text(resp))
+            except requests.RequestException as e:
+                st.error(f"Не удалось связаться с сервером: {e}")
+
+
+st.markdown(
+    "<h1 style='text-align: center;'>☕ SECRETBOX 📦</h1>", unsafe_allow_html=True
+)
+
+# Not logged in yet: show only the login form and stop here.
+if not st.session_state.token:
+    show_login()
+    st.stop()
+
+if st.button("Выйти"):
+    st.session_state.token = None
+    st.rerun()
 
 tab1, tab2 = st.tabs(["📋 Каталог", "📊 Аналитика"])
-# ... остальной ваш код ...
+
 with tab1:
     st.header("Просмотр меню")
     try:
-        response = requests.get(f"{API_URL}/coffee-shops")
-        # Добавим проверку ответа
+        response = api_get("/coffee-shops")
         if response.status_code == 200:
             shops = response.json().get("shops", [])
             if shops:
                 selected_shop = st.selectbox("Выберите кофейню:", shops)
                 if selected_shop:
-                    # Добавим вывод ошибки, если меню не грузится
-                    menu_resp = requests.get(f"{API_URL}/menu/{selected_shop}")
+                    menu_resp = api_get(f"/menu/{selected_shop}")
                     if menu_resp.status_code == 200:
                         menu_data = menu_resp.json().get("menu", {})
-                        df = pd.DataFrame(list(menu_data.items()), columns=["Напиток", "Цена"])
-                        st.dataframe(df, use_container_width=True)
+                        df = pd.DataFrame(
+                            list(menu_data.items()), columns=["Напиток", "Цена"]
+                        )
+                        st.dataframe(df)
                     else:
                         st.error(f"Ошибка загрузки меню: {menu_resp.status_code}")
             else:
                 st.warning("Список кофейнь пуст. Проверьте файлы в папке objects.")
         else:
             st.error(f"Сервер вернул ошибку: {response.status_code} - {response.text}")
-    except Exception as e:
+    except requests.RequestException as e:
         st.error(f"Не удалось связаться с сервером: {e}")
 
 with tab2:
-    # Заголовок изменен по вашему требованию
     st.header("Сравнение цен")
     if st.button("Запустить полный анализ"):
-        # ... остальной код для tab2 ...
-
         try:
-            data = requests.get(f"{API_URL}/analytics/compare").json()
-            shops = requests.get(f"{API_URL}/coffee-shops").json().get("shops", [])
-            
-            if data:
-                df = pd.DataFrame(data)
-                shop_cols = [c for c in df.columns if c not in ["Напиток", "Разброс"]]
-                df['match_count'] = df[shop_cols].notna().sum(axis=1)
-                
-                # Таблица 1: Абсолютные (5 из 5)
-                st.subheader("🟢 Абсолютные совпадения (во всех 5 кофейнях)")
-                df_abs = df[df['match_count'] == 5].drop(columns=['match_count'])
-                st.dataframe(df_abs, use_container_width=True)
-                
-                # Таблица 2: Частичные (от 2 до 4)
-                st.subheader("🟡 Частичные совпадения (от 2 до 4 кофейнях)")
-                df_part = df[(df['match_count'] >= 2) & (df['match_count'] <= 4)].drop(columns=['match_count'])
-                st.dataframe(df_part, use_container_width=True)
+            resp = api_get("/analytics/compare")
+            if resp.status_code != 200:
+                st.error(f"Ошибка анализа: {resp.status_code} - {resp.text}")
             else:
-                st.info("Данных для анализа недостаточно.")
-        except Exception as e:
+                data = resp.json()
+                if data:
+                    df = pd.DataFrame(data)
+                    # Every column except these three is one coffee shop's price.
+                    shop_cols = [
+                        c for c in df.columns if c not in ["Напиток", "Объём", "Разброс"]
+                    ]
+                    total = len(shop_cols)
+                    df["match_count"] = df[shop_cols].notna().sum(axis=1)
+
+                    st.subheader(f"🟢 Абсолютные совпадения (во всех {total} кофейнях)")
+                    df_abs = df[df["match_count"] == total].drop(columns=["match_count"])
+                    st.dataframe(df_abs)
+
+                    st.subheader(f"🟡 Частичные совпадения (от 2 до {total - 1} кофеен)")
+                    df_part = df[
+                        (df["match_count"] >= 2) & (df["match_count"] < total)
+                    ].drop(columns=["match_count"])
+                    st.dataframe(df_part)
+                else:
+                    st.info("Данных для анализа недостаточно.")
+        except requests.RequestException as e:
             st.error(f"Ошибка анализа: {e}")

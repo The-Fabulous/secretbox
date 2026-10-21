@@ -13,49 +13,43 @@ Menu changes are imported from staff uploads or entered manually; automatic moni
 
 ## Run locally on Windows
 
-Open separate PowerShell windows. In each window, start from the project folder:
+Install Python, Node.js (which includes npm), and a JDK 11 or newer if you want to import or edit menus.
 
-```powershell
-cd "D:\==Codes==\==StartUp==\SecretBox\commited secret box"
-```
+### One-time setup
 
-### 1. Start the Python API
+From the project folder, install the Python and frontend dependencies:
 
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-$env:SECRET_KEY = (& .\.venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(48))")
-.\.venv\Scripts\python.exe -m uvicorn main:app --reload
+cd secretbox-ui
+npm.cmd install
+cd ..
 ```
 
-The API runs at `http://127.0.0.1:8000`. Its SQLite database is created as `users.db` on first start.
-The command above creates a private random `SECRET_KEY` for this PowerShell window. Set it again each time you restart the API.
+### Start the website and API together
 
-### 2. Start the Java updater (only needed for menu updates)
-
-Install a JDK 11 or newer, open a second PowerShell window, then run:
+From the project folder, run this in PowerShell:
 
 ```powershell
-cd "D:\==Codes==\==StartUp==\SecretBox\commited secret box\price-updater"
-javac -encoding UTF-8 -d out src\main\java\com\secretbox\PriceUpdaterServer.java
+py start.py
+```
+
+Open `http://127.0.0.1:5173/secretbox/` and choose **Create an account** to register, then sign in. The API documentation is at `http://127.0.0.1:8000/docs`. Press `Ctrl+C` in the terminal to stop both services.
+
+The launcher generates a temporary `SECRET_KEY` if one is not already set. Restarting it signs out existing sessions.
+
+### Importing or editing menus
+
+The Java updater is optional and is only required for the manual and upload menu-update controls. In a separate PowerShell window, run:
+
+```powershell
+cd price-updater
+javac -encoding UTF-8 -d out .\src\main\java\com\secretbox\PriceUpdaterServer.java
 java -cp out com.secretbox.PriceUpdaterServer
 ```
 
-The updater runs at `http://127.0.0.1:8081`. Set `PYTHON_API_URL` if the Python API is not at its default address.
-The cafe catalog, chat, and price comparison work without this Java service. The manual and upload menu-update controls need it running.
-
-### 3. Start the website
-
-In another PowerShell window:
-
-```powershell
-cd "D:\==Codes==\==StartUp==\SecretBox\commited secret box\secretbox-ui"
-npm.cmd install
-npm.cmd run dev
-```
-
-Open the local URL printed by Vite. Optional frontend settings can be supplied through `VITE_API_URL` and `VITE_UPDATER_URL` before starting Vite.
-On first visit, choose **Create an account** to register, then sign in.
+The updater runs at `http://127.0.0.1:8081`. The catalog, chat, and price comparison work without it.
 
 ## Menu format
 
