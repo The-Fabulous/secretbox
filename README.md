@@ -86,3 +86,9 @@ Volumes may be entered in millilitres (`ml`/`мл`) or litres (`l`/`л`); litre 
 - Java updater: `PUT /api/menus/{shop_name}`, `GET /health`
 
 Menu updates require a bearer token, just like the existing cafe and chat endpoints.
+
+## Free website deployment with GitHub Pages
+
+The `.github/workflows/deploy-pages.yml` workflow builds the React app and publishes it to GitHub Pages when changes are pushed to `main`. The static website is free to host. It uses the existing Python API at `https://secretbox-main.onrender.com`; that API may take a short time to wake up after inactivity.
+
+The first workflow run enables GitHub Pages deployment. Once it completes, share `https://zhanaliber.github.io/secretbox/`. The API must also be redeployed with the GitHub Pages CORS origin for sign-in and menu data to work.

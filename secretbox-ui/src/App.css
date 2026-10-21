@@ -542,7 +542,7 @@ button {
 .menu-toolbar p {
   margin: 4px 0 0;
   color: #989087;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .small-divider {
@@ -599,7 +599,7 @@ button {
   color: #91887e;
   background: #fbf9f5;
   border-bottom: 1px solid #eee9e1;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 750;
   letter-spacing: 1px;
 }
@@ -609,7 +609,7 @@ button {
   padding: 8px 13px;
   color: #534c44;
   border-bottom: 1px solid #f1ede7;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .menu-table tbody tr:last-child td {
@@ -640,7 +640,7 @@ button {
   color: #758371;
   background: #f0f4ed;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .volume-missing {
@@ -656,7 +656,7 @@ button {
 
 .menu-table .price-cell {
   color: var(--coffee);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 750;
 }
 
@@ -1534,11 +1534,15 @@ button {
   }
 
   .menu-table th {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .menu-table td {
-    font-size: 10px;
+    font-size: 12px;
+  }
+
+  .col-category {
+    display: none;
   }
 
   .volume-note {
@@ -1639,4 +1643,118 @@ button {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== Категории напитков, сортировка таблицы ===== */
+
+.category-bar {
+  margin-bottom: 14px;
+  padding-bottom: 2px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.category-chip {
+  --chip-color: var(--coffee);
+  padding: 7px 12px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #6f665c;
+  background: #fbf9f5;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.category-chip:hover {
+  border-color: #d8c7b2;
+  background: #fffefa;
+}
+
+.category-chip:focus-visible,
+.sort-button:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
+
+.category-chip.active {
+  color: #fffaf3;
+  background: var(--coffee);
+  border-color: var(--coffee);
+}
+
+.chip-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--chip-color);
+  border-radius: 50%;
+}
+
+.category-chip.active .chip-dot {
+  box-shadow: 0 0 0 2px rgba(255, 250, 243, 0.55);
+}
+
+.chip-count {
+  color: #a39a8f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.category-chip.active .chip-count {
+  color: rgba(255, 250, 243, 0.75);
+}
+
+.category-tag {
+  --chip-color: #9a9288;
+  padding: 3px 9px;
+  display: inline-block;
+  color: var(--chip-color);
+  background: color-mix(in srgb, var(--chip-color) 13%, white);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.sort-button {
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.sort-button:hover {
+  color: var(--coffee);
+}
+
+.sort-arrow {
+  color: #c4b8a8;
+  font-size: 12px;
+}
+
+th[aria-sort="ascending"] .sort-arrow,
+th[aria-sort="descending"] .sort-arrow {
+  color: var(--terracotta);
+}
+
+.menu-table .price-heading .sort-button {
+  flex-direction: row;
+}
+
+.search-field input {
+  font-size: 13px;
 }
