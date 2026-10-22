@@ -1,88 +1,71 @@
-# SecretBox
+﻿# SecretBox
 
-SecretBox is a cafe menu and price tracker. The React website shows each drink's listed size and price, compares matching cafe menus, and supports text-file imports and manual menu edits.
+SecretBox is a cafe menu and price tracker. React shows drink sizes and prices, compares cafe menus, and supports text-file imports and manual menu edits.
 
-## Services
+## One service
 
-- **Python / FastAPI** serves the authenticated API, reads cafe menu files, stores accounts and chat messages, and compares current menu prices.
-- **Java** runs a small menu-updater HTTP service. It accepts an uploaded or edited menu, validates drink names, sizes and prices, then forwards the structured update to the Python API.
-- **React / Vite** provides the responsive website.
-
-Sizes are displayed only when supplied in the source menu. SecretBox does not estimate missing volumes.
-Menu changes are imported from staff uploads or entered manually; automatic monitoring of cafe websites is not configured because no source URLs were provided.
+A single Python / FastAPI process serves the built React website, authentication, menus, price comparisons, chat messages, and menu imports. Everything uses port 8000. Java and a running Vite server are no longer required.
 
 ## Run locally on Windows
 
-Install Python, Node.js (which includes npm), and a JDK 11 or newer if you want to import or edit menus.
+Use Python 3.10+ and Node.js compatible with the project's Vite version. Node.js is used only to build the website; it is not a separate running service.
 
-### One-time setup
-
-From the project folder, install the Python and frontend dependencies:
+With your Python virtual environment activated, run from the repository folder:
 
 ```powershell
-py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-cd secretbox-ui
-npm.cmd install
-cd ..
+python -m pip install -r requirements.txt
+python start.py
 ```
 
-### Start the website and API together
+On the first start, the launcher installs frontend dependencies with `npm ci` if needed and builds the website. Later starts reuse the build unless frontend files have changed. To force a rebuild, run `python start.py --build`.
 
-From the project folder, run this in PowerShell:
+Open `http://127.0.0.1:8000/secretbox/` and create an account or sign in. API docs are at `http://127.0.0.1:8000/docs`. Press `Ctrl+C` to stop the service.
+
+The launcher generates a temporary `SECRET_KEY` when none is set. Set a persistent `SECRET_KEY` in the environment to keep sessions valid across restarts.
+
+Host and port can be configured with `--host` / `--port` or the `HOST` / `PORT` environment variables. For example:
 
 ```powershell
-py start.py
+python start.py --host 0.0.0.0 --port 8000
 ```
 
-Open `http://127.0.0.1:5173/secretbox/` and choose **Create an account** to register, then sign in. The API documentation is at `http://127.0.0.1:8000/docs`. Press `Ctrl+C` in the terminal to stop both services.
+## Menu imports and manual edits
 
-The launcher generates a temporary `SECRET_KEY` if one is not already set. Restarting it signs out existing sessions.
-
-### Importing or editing menus
-
-The Java updater is optional and is only required for the manual and upload menu-update controls. In a separate PowerShell window, run:
-
-```powershell
-cd price-updater
-javac -encoding UTF-8 -d out .\src\main\java\com\secretbox\PriceUpdaterServer.java
-java -cp out com.secretbox.PriceUpdaterServer
-```
-
-The updater runs at `http://127.0.0.1:8081`. The catalog, chat, and price comparison work without it.
-
-## Menu format
-
-Existing menu files in `objects` may use lines like:
+Both controls save directly through the Python API. No additional process is needed. Supported formats:
 
 ```text
 Americano 250 ml — 890 ₸
 Latte — 1190 ₸
 ```
 
-For manual edits, use one drink per line:
-
 ```text
 Americano | 250 ml | 890
-Latte | 350 ml | 1190
+Latte | 0.35 l | 1190
 Tea | | 590
 ```
 
-Volumes may be entered in millilitres (`ml`/`мл`) or litres (`l`/`л`); litre values are converted to millilitres. Blank sizes remain unlisted. Price-list imports use the same line formats as the manual editor.
+Sizes may use `ml`, `мл`, `l`, or `л`. Blank sizes remain unlisted. Imports must be UTF-8, at most 2 MB, and contain 1–1000 valid drinks. Invalid imports do not replace the menu.
+
+Automatic monitoring of cafe websites is not configured. The chat stores user messages; an AI model is not connected.
 
 ## API overview
 
 - `POST /register`, `POST /login`
 - `GET /coffee-shops`
-- `GET /menu/{shop_name}`, `PUT /menu/{shop_name}`
+- `GET /menu/{shop_name}`, `PUT /menu/{shop_name}` (JSON)
+- `PUT /api/menus/{shop_name}` (UTF-8 plain text import)
 - `GET /analytics/compare`
 - `GET /chat`, `POST /chat`
-- Java updater: `PUT /api/menus/{shop_name}`, `GET /health`
+- `GET /health`
 
-Menu updates require a bearer token, just like the existing cafe and chat endpoints.
+Cafe, chat, analytics, and menu-update endpoints require a bearer token. Data defaults to `objects/` and `users.db`; `SECRETBOX_DATA_DIR` and `SECRETBOX_DB_FILE` can override these paths.
 
-## Free website deployment with GitHub Pages
+## Development and deployment
 
-The `.github/workflows/deploy-pages.yml` workflow builds the React app and publishes it to GitHub Pages when changes are pushed to `main`. The static website is free to host. It uses the existing Python API at `https://secretbox-main.onrender.com`; that API may take a short time to wake up after inactivity.
+For optional frontend hot reload, run `npm.cmd run dev` in `secretbox-ui` alongside the API. Vite proxies API requests to port 8000. This is only a development option; normal use needs just `python start.py`.
 
-The first workflow run enables GitHub Pages deployment. Once it completes, share `https://zhanaliber.github.io/secretbox/`. The API must also be redeployed with the GitHub Pages CORS origin for sign-in and menu data to work.
+For a single-service deployment, build the frontend during deployment and run `python start.py --host 0.0.0.0`. Include `secretbox-ui/dist` in the deployment artifact. Node.js is unnecessary at runtime when the build is current. Persist the database and menu files across deployments.
+
+The existing GitHub Pages workflow remains an alternative static deployment. It sets `VITE_API_URL` to the separately hosted Python API; redeploy that API to include the new import endpoint. The normal local single-service build uses its own origin.
+
+The old `price-updater/` Java source is retained as legacy code and is not used by the application.

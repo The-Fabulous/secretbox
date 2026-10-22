@@ -9,14 +9,16 @@ from pathlib import Path
 
 import bcrypt
 import jwt
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field, ValidationError
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "objects"
-DB_FILE = BASE_DIR / "users.db"
+DATA_DIR = Path(os.environ.get("SECRETBOX_DATA_DIR", BASE_DIR / "objects"))
+DB_FILE = Path(os.environ.get("SECRETBOX_DB_FILE", BASE_DIR / "users.db"))
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secretbox-local-key-change-before-deployment")
 ALGORITHM = "HS256"
 SIZE_RE = re.compile(r"(?<!\d)(\d+(?:[.,]\d+)?)\s*(ml|мл|l|л)\b", re.IGNORECASE)
@@ -297,3 +299,68 @@ def compare_prices(username: str = Depends(verify_token)):
         result["Разброс"] = max(row["numeric_prices"]) - min(row["numeric_prices"])
         results.append(result)
     return results
+
+
+def parse_menu_import(content: str) -> MenuUpdate:
+    items = []
+    for line_number, line in enumerate(content.splitlines(), start=1):
+        line = line.strip().lstrip("\ufeff").strip()
+        if not line:
+            continue
+        try:
+            if "|" in line:
+                name, size, price = (part.strip() for part in line.split("|"))
+                size_ml = None
+                if size:
+                    match = SIZE_RE.fullmatch(size)
+                    if not match:
+                        raise ValueError("Size must include ml or l")
+                    amount = float(match.group(1).replace(",", "."))
+                    size_ml = round(amount * 1000) if match.group(2).lower() in ("l", "л") else round(amount)
+                if not re.fullmatch(r"[\d][\d\s.,]*(?:₸|KZT)?", price, re.IGNORECASE):
+                    raise ValueError("Invalid price")
+                item = {"name": name, "size_ml": size_ml, "price": int(re.sub(r"\D", "", price))}
+            else:
+                item = parse_menu_line(line)
+                if item is None:
+                    raise ValueError("Invalid menu format")
+            items.append(MenuItemInput(**item))
+            if len(items) > 1000:
+                raise ValueError("Maximum 1000 drinks")
+        except (ValueError, TypeError) as exc:
+            raise HTTPException(status_code=400, detail=f"Could not read menu line {line_number}") from exc
+    try:
+        return MenuUpdate(items=items)
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail="The menu must contain at least one drink") from exc
+
+
+@app.put("/api/menus/{shop_name}")
+async def import_menu(shop_name: str, request: Request, username: str = Depends(verify_token)):
+    get_shop_path(shop_name)
+    body = bytearray()
+    async for chunk in request.stream():
+        if len(body) + len(chunk) > 2_000_000:
+            raise HTTPException(status_code=413, detail="Menu file is too large (2 MB maximum)")
+        body.extend(chunk)
+    try:
+        content = body.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(status_code=400, detail="Menu file must use UTF-8 encoding") from exc
+    return update_menu(shop_name, parse_menu_import(content), username)
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/", include_in_schema=False)
+def website():
+    return RedirectResponse("/secretbox/")
+
+
+# Mount only the built website; API routes and project data remain separate.
+FRONTEND_DIST = BASE_DIR / "secretbox-ui" / "dist"
+if (FRONTEND_DIST / "index.html").is_file():
+    app.mount("/secretbox", StaticFiles(directory=FRONTEND_DIST, html=True), name="website")

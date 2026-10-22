@@ -3,8 +3,7 @@ import axios from 'axios';
 import { CATEGORIES, categorize, getCategory } from './categories';
 import './App.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
-const UPDATER_URL = import.meta.env.VITE_UPDATER_URL || 'http://127.0.0.1:8081';
+const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
 const api = axios.create({ baseURL: API_URL });
 const authConfig = (token) => ({ headers: { Authorization: `Bearer ${token}` } });
 
@@ -253,8 +252,8 @@ function App() {
     setUpdateMessage('');
     setMenuError('');
     try {
-      await axios.put(
-        `${UPDATER_URL}/api/menus/${encodeURIComponent(selectedShop)}`,
+      await api.put(
+        `/api/menus/${encodeURIComponent(selectedShop)}`,
         contents,
         { headers: { ...authConfig(token).headers, 'Content-Type': 'text/plain; charset=utf-8' } },
       );
@@ -262,7 +261,7 @@ function App() {
       setUpdateMessage('Menu updated successfully.');
     } catch (error) {
       const detail = error.response?.data?.detail;
-      setMenuError(detail || 'Update failed. Make sure both the Java updater and Python API are running.');
+      setMenuError(typeof detail === 'string' ? detail : 'Update failed. Please try again.');
     } finally {
       setSavingMenu(false);
     }
