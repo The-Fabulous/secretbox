@@ -1,0 +1,310 @@
+{
+  "items": [
+    {
+      "name": "Раф қазақша",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Раф соленый арахис",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Раф ваниль-клубника",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Латте құрт",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Qanattandyratyn raf",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Almurt-halva raf",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Эспрессо тоник",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Тоник матча",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Șie espresso tonic",
+      "size_ml": null,
+      "price": 1890
+    },
+    {
+      "name": "Ванильный пломбир коктейль",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Клубничный мусс коктейль",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Банановый пудинг коктейль",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Вафля-попкорн коктейль",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Смузи Клубничный",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Смузи Ягодный",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Какао бэйби дринкс",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Горячий шоколад бэйби дринкс",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Клубничный бэйбичино",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Эспрессо",
+      "size_ml": null,
+      "price": 690
+    },
+    {
+      "name": "Американо",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Латте",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Капучино",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Флэт уайт",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Раф",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Моккачино",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Спэниш латте",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Марокканский чай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Имбирный чай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Клюквенный чай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Облепиховый чай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Карак чай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Глинтвейн",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Зелёная матча",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Голубая матча",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Șie șokolad",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Gülșai karkade",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Purple blue tea",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Qulpynai лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Kiwi-lime лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Kók aspan лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Мохито лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Ананас-имбирь лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Мохито базилик-клубника лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Манго-маракуйя лимонад",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Айс матча зеленая",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс матча голубая",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Erekșe Qulpynay matcha",
+      "size_ml": null,
+      "price": 1990
+    },
+    {
+      "name": "Апельсиновый фреш",
+      "size_ml": null,
+      "price": 2390
+    },
+    {
+      "name": "Яблочный фреш",
+      "size_ml": null,
+      "price": 1890
+    },
+    {
+      "name": "Яблоко-апельсин фреш",
+      "size_ml": null,
+      "price": 2190
+    },
+    {
+      "name": "Айс американо",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Айс латте",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Айс капучино",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Бамбл кофе",
+      "size_ml": null,
+      "price": 1990
+    },
+    {
+      "name": "Șie bumble",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Фраппучино",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Манго-маракуйя айс ти",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Ананас-имбирь айс ти",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Базилик-клубника айс ти",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Ġajaiyp ice tea",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Samal ice tea",
+      "size_ml": null,
+      "price": 1090
+    }
+  ],
+  "currency": "KZT"
+}

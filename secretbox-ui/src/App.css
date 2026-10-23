@@ -312,6 +312,7 @@ button {
 }
 
 .view-tabs {
+  position: relative;
   display: flex;
   gap: 25px;
   padding: 0 3px;
@@ -338,13 +339,15 @@ button {
   color: var(--coffee);
 }
 
-.view-tab.active::after {
-  content: "";
+.view-tab-indicator {
   height: 2px;
   position: absolute;
-  right: 5px;
   bottom: -1px;
-  left: 5px;
+  left: 0;
+  width: var(--tab-width, 0px);
+  transform: translateX(var(--tab-left, 0px));
+  pointer-events: none;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1);
   background: var(--terracotta);
   border-radius: 2px 2px 0 0;
 }
@@ -357,7 +360,6 @@ button {
 .content-panel {
   min-height: 365px;
   padding: 27px 0 22px;
-  animation: panel-in 280ms ease both;
 }
 
 .panel-heading {
@@ -1757,4 +1759,37 @@ th[aria-sort="descending"] .sort-arrow {
 
 .search-field input {
   font-size: 13px;
+}
+
+/* Directional page motion stays inside the workspace on narrow screens. */
+.view-stage {
+  overflow-x: clip;
+}
+
+.slide-transition {
+  --slide-distance: 32px;
+  min-width: 0;
+}
+
+.menu-content.slide-transition {
+  --slide-distance: 20px;
+}
+
+.menu-reveal {
+  animation: menu-reveal 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes menu-reveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .slide-transition { --slide-distance: 16px; }
+  .menu-content.slide-transition { --slide-distance: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-reveal { animation: none; }
+  .view-tab-indicator { transition: none; }
 }

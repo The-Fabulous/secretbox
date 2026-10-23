@@ -1,0 +1,220 @@
+{
+  "items": [
+    {
+      "name": "Айс латте печенье соль",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс латте банан-карамель",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс латте фисташковое мороженое",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс американо Цитрус",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Фрапучино Банан",
+      "size_ml": null,
+      "price": 1990
+    },
+    {
+      "name": "Cherry эспрессо тоник",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Bumble coffee",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Айс матча манго",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Айс матча клубника",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Айс матча груша",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Смузи малиновый",
+      "size_ml": null,
+      "price": 1550
+    },
+    {
+      "name": "Смузи Витаминный",
+      "size_ml": null,
+      "price": 1550
+    },
+    {
+      "name": "Bumble matcha",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Ист-ти Цитрус",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Ист-ти Ягодный",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Эспрессо",
+      "size_ml": null,
+      "price": 700
+    },
+    {
+      "name": "Американо",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Флэт-Уайт",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Капучино",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Латте",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Раф",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Доп шот",
+      "size_ml": null,
+      "price": 350
+    },
+    {
+      "name": "Какао",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Шоколад",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Черный чай",
+      "size_ml": null,
+      "price": 350
+    },
+    {
+      "name": "Зеленый чай",
+      "size_ml": null,
+      "price": 350
+    },
+    {
+      "name": "Глинтвейн",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Клубника апельсин",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ташкентский чай",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Марокканский чай",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Облепиха апельсин",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ягодный чай",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Имбирный чай",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Гляссе",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Фраппучино",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Айс Латте",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Айс Американо",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Бамбл кофе",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Эспрессо тоник",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Матча тоник",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Матча латте",
+      "size_ml": null,
+      "price": 1300
+    },
+    {
+      "name": "Милкшейк",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Лимонад",
+      "size_ml": null,
+      "price": 1090
+    }
+  ],
+  "currency": "KZT"
+}

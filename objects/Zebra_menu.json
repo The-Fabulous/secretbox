@@ -1,0 +1,220 @@
+{
+  "items": [
+    {
+      "name": "Frappe Шоколад",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Frappe Арахис",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Frappe Соленая карамель",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Latte Green Matcha",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Latte Sakura Matcha",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Latte Blue Matcha",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Лимонад Тропический",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Лимонад 5 таежных ягод",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Лимонад Арбуз-клубника",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Какао",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Oreo шейк",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Горячий шоколад",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Клубничный какао",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Milkshake Honey Melon",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Milkshake Vanilla",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Milkshake Rainbow Unicorn",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Milkshake Banana",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Ice Latte",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Ice Capuccino",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Латте Гранат",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Латте Черника",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Латте Spanish Peach",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Раф Лавандовый",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Раф Цитрусовый",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Раф Арахисовый урбеч",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Туран кофе",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Тары шай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Қазақ шай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Қарақ шай",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Сенча с мятой и чабрецом",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Глинтвейн",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Чай Клубника малина-мята",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Latte",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Capuccino",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Americano",
+      "size_ml": null,
+      "price": 790
+    },
+    {
+      "name": "Raf",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Mocaccino",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Flat White",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Espresso",
+      "size_ml": null,
+      "price": 600
+    },
+    {
+      "name": "Batch Brew",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Pour-over Coffee",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Cold Brew",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Nitro Coffee",
+      "size_ml": null,
+      "price": 1390
+    }
+  ],
+  "currency": "KZT"
+}

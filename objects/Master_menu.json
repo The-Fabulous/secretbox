@@ -1,0 +1,225 @@
+{
+  "items": [
+    {
+      "name": "Эспрессо",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Американо",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Айс Американо",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Батч брю",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Пуровер",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Капучино",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Айс Капучино",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Латте",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс Латте",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Флэт Уайт",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Раф ванильный",
+      "size_ml": null,
+      "price": 1490
+    },
+    {
+      "name": "Матча латте",
+      "size_ml": null,
+      "price": 1390
+    },
+    {
+      "name": "Айс Матча Латте",
+      "size_ml": null,
+      "price": 1190
+    },
+    {
+      "name": "Какао",
+      "size_ml": null,
+      "price": 890
+    },
+    {
+      "name": "Айс Какао",
+      "size_ml": null,
+      "price": 1090
+    },
+    {
+      "name": "Hot Cherry",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Батч DAIQUIRI",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Айс Батч DAIQUIRI",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Батч KUNSHUAQ",
+      "size_ml": null,
+      "price": 1290
+    },
+    {
+      "name": "Латте 3 специи",
+      "size_ml": null,
+      "price": 1590
+    },
+    {
+      "name": "Раф HOGWARTS",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Balmuz Latte",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Pie-Pie Latte",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Lemon pie latte",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Matcha lemon pie",
+      "size_ml": null,
+      "price": 1790
+    },
+    {
+      "name": "Матча-тоник",
+      "size_ml": null,
+      "price": 2190
+    },
+    {
+      "name": "Черри брю",
+      "size_ml": null,
+      "price": 1690
+    },
+    {
+      "name": "Бамбл кофе",
+      "size_ml": null,
+      "price": 2290
+    },
+    {
+      "name": "Эспрессо тоник",
+      "size_ml": null,
+      "price": 2190
+    },
+    {
+      "name": "Cherry ice tea",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Чай манго-имбирь",
+      "size_ml": 350,
+      "price": 990
+    },
+    {
+      "name": "Айс Ти Манго-имбирь",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Чай Смородина-Грейпфрут",
+      "size_ml": 350,
+      "price": 990
+    },
+    {
+      "name": "Айс Ти Смородина-Грейпфрут",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Цитрусовый чай",
+      "size_ml": 350,
+      "price": 990
+    },
+    {
+      "name": "Айс Ти Цитрусовый",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Чай черный",
+      "size_ml": 350,
+      "price": 590
+    },
+    {
+      "name": "Чай зеленый",
+      "size_ml": 350,
+      "price": 590
+    },
+    {
+      "name": "Лимонад Смородина-Грейпфрут",
+      "size_ml": 450,
+      "price": 1190
+    },
+    {
+      "name": "Лимонад вишневый",
+      "size_ml": 450,
+      "price": 1190
+    },
+    {
+      "name": "Лимонад Лимонная конфета",
+      "size_ml": 450,
+      "price": 1190
+    },
+    {
+      "name": "Лимонад Тропический",
+      "size_ml": 450,
+      "price": 1190
+    },
+    {
+      "name": "Апельсиновый фреш",
+      "size_ml": null,
+      "price": 1990
+    },
+    {
+      "name": "Brew",
+      "size_ml": null,
+      "price": 1490
+    }
+  ],
+  "currency": "KZT"
+}

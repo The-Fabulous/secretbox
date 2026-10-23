@@ -1,6 +1,6 @@
 ﻿# SecretBox
 
-SecretBox is a cafe menu and price tracker. React shows drink sizes and prices, compares cafe menus, and supports text-file imports and manual menu edits.
+SecretBox is a cafe menu and price tracker. React shows drink sizes and prices, compares cafe menus, and supports JSON menus, legacy text imports, and manual menu edits.
 
 ## One service
 
@@ -29,9 +29,41 @@ Host and port can be configured with `--host` / `--port` or the `HOST` / `PORT` 
 python start.py --host 0.0.0.0 --port 8000
 ```
 
-## Menu imports and manual edits
+## JSON menu storage
 
-Both controls save directly through the Python API. No additional process is needed. Supported formats:
+Each cafe has one UTF-8 JSON file in `objects/`, for example `Slon_menu.json`:
+
+```json
+{
+  "currency": "KZT",
+  "items": [
+    {"name": "Latte", "size_ml": 350, "price": 1190},
+    {"name": "Tea", "size_ml": null, "price": 590}
+  ]
+}
+```
+
+Prices are positive integers in tenge. `size_ml` is the volume in millilitres, or `null` when unknown. The filename identifies the cafe. The catalog and analytics read only `*_menu.json` files. Edits are validated and saved as formatted JSON using atomic file replacement; the previous menu is not truncated if writing fails. Update timestamps remain in SQLite.
+
+The website editor shows JSON and accepts `.json` uploads. Both JSON and legacy text imports are saved in this same JSON format. Saving replaces the entire menu; version history is not retained.
+
+To convert older menu files using the provided code, run from the repository folder:
+
+```powershell
+python convert_menus.py
+```
+
+This validates all `*_menu.txt` inputs and creates matching JSON files. Existing JSON with different contents is never overwritten. To remove the old files after verifying the saved JSON:
+
+```powershell
+python convert_menus.py --remove-source
+```
+
+Use `--directory PATH` to convert another folder. The bundled menus have already been converted.
+
+## Legacy text imports
+
+These text formats are still accepted by the upload control and import endpoint:
 
 ```text
 Americano 250 ml — 890 ₸
@@ -53,7 +85,7 @@ Automatic monitoring of cafe websites is not configured. The chat stores user me
 - `POST /register`, `POST /login`
 - `GET /coffee-shops`
 - `GET /menu/{shop_name}`, `PUT /menu/{shop_name}` (JSON)
-- `PUT /api/menus/{shop_name}` (UTF-8 plain text import)
+- `PUT /api/menus/{shop_name}` (UTF-8 JSON or legacy text import)
 - `GET /analytics/compare`
 - `GET /chat`, `POST /chat`
 - `GET /health`
@@ -61,6 +93,22 @@ Automatic monitoring of cafe websites is not configured. The chat stores user me
 Cafe, chat, analytics, and menu-update endpoints require a bearer token. Data defaults to `objects/` and `users.db`; `SECRETBOX_DATA_DIR` and `SECRETBOX_DB_FILE` can override these paths.
 
 ## Development and deployment
+
+### Code layout
+
+- `main.py` assembles the FastAPI routers, initializes the database on startup, and serves the website.
+- `backend/config.py`, `database.py`, and `schemas.py` contain settings, database setup/connections, and request models.
+- `backend/auth.py`, `menus.py`, `analytics.py`, and `chat.py` contain the corresponding API features.
+- `backend/menu_parser.py` contains shared menu parsing and import validation.
+- `backend/menu_storage.py` reads validated JSON and writes it atomically; `convert_menus.py` converts legacy files.
+- `secretbox-ui/src/App.jsx` composes the application screens.
+- `secretbox-ui/src/pages/` contains authentication, catalog, analytics, and chat screens.
+- `secretbox-ui/src/components/` contains the brand, header, overview, navigation, and menu editor.
+- `secretbox-ui/src/hooks/useWorkspace.js` manages shared state and data loading; `api.js` configures HTTP requests and `utils/` contains formatting, session, and sorting helpers.
+
+Run backend integration checks with `python -m unittest test_single_service -v`. They use a temporary database and menu directory. Run frontend checks with `npm.cmd --prefix secretbox-ui run lint` and `npm.cmd --prefix secretbox-ui run build`.
+
+### Running and hosting
 
 For optional frontend hot reload, run `npm.cmd run dev` in `secretbox-ui` alongside the API. Vite proxies API requests to port 8000. This is only a development option; normal use needs just `python start.py`.
 

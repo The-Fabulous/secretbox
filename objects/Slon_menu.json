@@ -1,0 +1,290 @@
+{
+  "items": [
+    {
+      "name": "Молочный коктейль банан-карамель",
+      "size_ml": null,
+      "price": 1550
+    },
+    {
+      "name": "Мохито",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Айсти клубника с сырной пенкой",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Айс раф кокос-миндаль",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Лимонад Киви Апельсин",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Лимонад Ананас Маракуйя",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Лимонад Манго Маракуйя",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Смузи Апельсин Манго",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Смузи Клубника Банан",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Смузи Киви Маракуйя Ананас",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Смузи Грецкий Орех Финики",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Смузи Голубика Банан",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Молочный коктейль Ягодный",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Молочный коктейль Oreo",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Молочный коктейль Ванильный",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Молочный коктейль Шоколадный",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Espresso",
+      "size_ml": null,
+      "price": 700
+    },
+    {
+      "name": "Americano",
+      "size_ml": null,
+      "price": 990
+    },
+    {
+      "name": "Flat White",
+      "size_ml": null,
+      "price": 1100
+    },
+    {
+      "name": "Cappuccino",
+      "size_ml": null,
+      "price": 1050
+    },
+    {
+      "name": "Latte",
+      "size_ml": null,
+      "price": 1050
+    },
+    {
+      "name": "Айс Латте",
+      "size_ml": null,
+      "price": 1350
+    },
+    {
+      "name": "Эспрессо Тоник",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Латте По-Дубайски",
+      "size_ml": null,
+      "price": 1350
+    },
+    {
+      "name": "Фраппучино",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Хорнет Ананас Малина",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Хорнет Апельсин Карамель",
+      "size_ml": null,
+      "price": 1250
+    },
+    {
+      "name": "Свежевыжатый сок Яблоко",
+      "size_ml": null,
+      "price": 1650
+    },
+    {
+      "name": "Свежевыжатый сок Апельсин",
+      "size_ml": null,
+      "price": 2100
+    },
+    {
+      "name": "Свежевыжатый сок Грейпфрут",
+      "size_ml": null,
+      "price": 2450
+    },
+    {
+      "name": "Свежевыжатый сок Витаминный",
+      "size_ml": null,
+      "price": 2450
+    },
+    {
+      "name": "Раф Клубника",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Раф Сырный",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Раф Арахис",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Раф Кекс-Голубика",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Раф с Халвой",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Раф Фисташка",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Блэк Мокко",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Кофе на растительном молоке",
+      "size_ml": null,
+      "price": 1450
+    },
+    {
+      "name": "Матча Зеленая/Голубая",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Клубничная Айс Матча",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Матча на растительном молоке",
+      "size_ml": null,
+      "price": 1550
+    },
+    {
+      "name": "Чай Зеленый/Черный",
+      "size_ml": null,
+      "price": 400
+    },
+    {
+      "name": "Чай Малина-Мята",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Чай Облепиха-Яблоко",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Чай Груша-Тимьян",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Чай Облепиха-Розмарин",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ice Tea Ананас Манго",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ice Tea Персик",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ice Tea Малина",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ice Tea Клубника Апельсин",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Ice Tea Яблоко-Голубика",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Какао",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Горячий шоколад",
+      "size_ml": null,
+      "price": 1050
+    },
+    {
+      "name": "Глинтвейн",
+      "size_ml": null,
+      "price": 950
+    },
+    {
+      "name": "Горячий шоколад с малиной",
+      "size_ml": null,
+      "price": 1150
+    },
+    {
+      "name": "Сангрия",
+      "size_ml": null,
+      "price": 950
+    }
+  ],
+  "currency": "KZT"
+}

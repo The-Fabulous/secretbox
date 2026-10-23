@@ -41,7 +41,11 @@ class SingleServiceTests(unittest.TestCase):
         root = Path(cls.temp.name)
         menus = root / "objects"
         menus.mkdir()
-        (menus / "test_menu.txt").write_text("Tea — 590 ₸\n", encoding="utf-8")
+        cls.menus = menus
+        for shop, price in (("test", 590), ("comparison", 790)):
+            (menus / f"{shop}_menu.json").write_text(json_module.dumps({
+                "currency": "KZT", "items": [{"name": "Tea", "size_ml": None, "price": price}],
+            }), encoding="utf-8")
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
@@ -130,6 +134,47 @@ class SingleServiceTests(unittest.TestCase):
         self.assertEqual(messages[-1]["text"], "Hello")
         for path in ("/coffee-shops", "/analytics/compare"):
             self.assertEqual(http_request("GET", self.url + path, headers=self.headers, timeout=5).status_code, 200)
+
+    def test_json_menu_update_and_comparison(self):
+        response = http_request("PUT", self.url + "/menu/test", headers=self.headers,
+                                json={"items": [{"name": "Tea", "price": 590}]})
+        self.assertEqual(response.status_code, 200, response.text)
+        menu = http_request("GET", self.url + "/menu/test", headers=self.headers).json()
+        self.assertTrue(menu["updated_at"])
+        self.assertEqual(menu["items"][0]["price"], 590)
+        rows = http_request("GET", self.url + "/analytics/compare", headers=self.headers).json()
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["Разброс"], 200)
+        self.assertEqual(rows[0]["test"], "590 ₸")
+        self.assertEqual(rows[0]["comparison"], "790 ₸")
+
+    def test_json_file_import_and_storage(self):
+        document = {"currency": "KZT", "items": [
+            {"name": "Латте — special | edition", "size_ml": 350, "price": 1190},
+            {"name": "Чай", "size_ml": None, "price": 590},
+        ]}
+        response = self.upload(json_module.dumps(document, ensure_ascii=False).encode("utf-8"))
+        self.assertEqual(response.status_code, 200, response.text)
+        path = self.menus / "test_menu.json"
+        self.assertEqual(json_module.loads(path.read_text(encoding="utf-8")), document)
+        items = http_request("GET", self.url + "/menu/test", headers=self.headers).json()["items"]
+        self.assertEqual(items[0]["name"], document["items"][0]["name"])
+        previous = path.read_bytes()
+        for bad in (b'{"items":[]}', b'{"items":[', b'[]', b'{"items":[{"name":" ","price":100}]}',
+                    b'{"currency":"USD","items":[{"name":"Tea","price":100}]}'):
+            self.assertEqual(self.upload(bad).status_code, 400)
+            self.assertEqual(path.read_bytes(), previous)
+        self.assertFalse(list(self.menus.glob("*.txt")))
+
+    def test_authentication_errors(self):
+        response = http_request("POST", self.url + "/login",
+                                json={"username": "tester", "password": "incorrect"})
+        self.assertEqual(response.status_code, 400)
+        response = http_request("POST", self.url + "/register",
+                                json={"username": "tester", "password": "test-password"})
+        self.assertEqual(response.status_code, 400)
+        for path in ("/coffee-shops", "/menu/test", "/analytics/compare", "/chat"):
+            self.assertEqual(http_request("GET", self.url + path).status_code, 401)
 
 
 if __name__ == "__main__":
