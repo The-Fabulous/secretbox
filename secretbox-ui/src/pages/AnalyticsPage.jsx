@@ -1,5 +1,13 @@
+import { useMemo, useState } from 'react';
 
 export default function AnalyticsPage({ analytics, analyticsError, analyticsLoading, analyticsColumns }) {
+  const [spreadSort, setSpreadSort] = useState('none');
+  const sortedAnalytics = useMemo(() => {
+    if (spreadSort === 'none') return analytics;
+    const direction = spreadSort === 'ascending' ? 1 : -1;
+    return [...analytics].sort((a, b) => (Number(a['Разброс']) - Number(b['Разброс'])) * direction);
+  }, [analytics, spreadSort]);
+
   return (
     <section className="content-panel">
       <div className="panel-heading">
@@ -16,8 +24,20 @@ export default function AnalyticsPage({ analytics, analyticsError, analyticsLoad
       ) : analytics.length ? (
         <div className="table-wrap">
           <table className="menu-table analytics-table">
-            <thead><tr>{analyticsColumns.map((column) => <th key={column}>{column}</th>)}</tr></thead>
-            <tbody>{analytics.map((row, index) => (
+            <thead><tr>{analyticsColumns.map((column) => (
+              <th key={column} aria-sort={column === 'Разброс' ? spreadSort : undefined}>
+                {column === 'Разброс' ? (
+                  <button
+                    type="button"
+                    className="sort-button"
+                    onClick={() => setSpreadSort((current) => current === 'ascending' ? 'descending' : 'ascending')}
+                  >
+                    {column} <span className="sort-arrow" aria-hidden="true">{spreadSort === 'ascending' ? '↑' : spreadSort === 'descending' ? '↓' : '↕'}</span>
+                  </button>
+                ) : column}
+              </th>
+            ))}</tr></thead>
+            <tbody>{sortedAnalytics.map((row, index) => (
               <tr key={`${row['Напиток']}-${row['Объём']}-${index}`}>
                 {analyticsColumns.map((column) => (
                   <td key={column}>{row[column] ?? '—'}{column === 'Разброс' ? ' ₸' : ''}</td>

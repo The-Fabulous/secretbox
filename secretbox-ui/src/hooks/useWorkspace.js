@@ -297,7 +297,8 @@ export default function useWorkspace() {
   }
 
   const analyticsColumns = analytics.length
-    ? [...new Set(analytics.flatMap((row) => Object.keys(row)))]
+    ? ['Напиток', 'Объём', ...new Set(analytics.flatMap((row) => Object.keys(row))
+      .filter((column) => !['Напиток', 'Объём', 'Разброс'].includes(column))), 'Разброс']
     : [];
 
   return {
