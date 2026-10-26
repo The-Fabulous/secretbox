@@ -1,7 +1,7 @@
 import Brand from '../components/Brand';
 import SlideTransition from '../components/SlideTransition';
 
-export default function AuthPage({ authMode, username, password, authMessage, setUsername, setPassword, setAuthMode, setAuthMessage, submitAuth }) {
+export default function AuthPage({ authMode, username, password, authMessage, authBusy, setUsername, setPassword, setAuthMode, setAuthMessage, submitAuth, continueAsGuest }) {
   return (
     <main className="auth-page">
       <section className="auth-story">
@@ -41,15 +41,20 @@ export default function AuthPage({ authMode, username, password, authMessage, se
                 required
               />
             </label>
-            {authMessage && <p className="form-message">{authMessage}</p>}
-            <button className="button button-primary auth-submit" type="submit">
-              {authMode === 'login' ? 'Sign in' : 'Create account'} <span aria-hidden="true">↗</span>
+            {authMessage && <p className="form-message" role="status">{authMessage}</p>}
+            <button className="button button-primary auth-submit" type="submit" disabled={authBusy}>
+              {authBusy ? 'Connecting…' : authMode === 'login' ? 'Sign in' : 'Create account'} <span aria-hidden="true">↗</span>
             </button>
           </form>
+          <button className="button button-quiet guest-submit" type="button" onClick={continueAsGuest}>
+            Continue as guest <span aria-hidden="true">→</span>
+          </button>
+          <p className="guest-hint">Browse saved cafe menus and compare prices. No account needed.</p>
           <p className="auth-switch">
             {authMode === 'login' ? 'New to SecretBox?' : 'Already have an account?'}
             <button
               type="button"
+              disabled={authBusy}
               onClick={() => {
                 setAuthMode(authMode === 'login' ? 'register' : 'login');
                 setAuthMessage('');

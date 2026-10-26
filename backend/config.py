@@ -10,5 +10,6 @@ ALGORITHM = "HS256"
 FRONTEND_DIST = BASE_DIR / "secretbox-ui" / "dist"
 CORS_ORIGINS = os.environ.get(
     "CORS_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173,https://zhanaliber.github.io",
+    "http://localhost:5173,http://127.0.0.1:5173,https://zhanaliber.github.io,https://the-fabulous.github.io",
 ).split(",")
+CORS_ORIGINS = [origin.strip().rstrip("/") for origin in CORS_ORIGINS if origin.strip()]

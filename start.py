@@ -22,6 +22,7 @@ def build_needed():
     )]
     for directory in ("src", "public"):
         inputs.extend((FRONTEND / directory).rglob("*"))
+    inputs.extend((ROOT / "objects").glob("*_menu.json"))
     return any(path.is_file() and path.stat().st_mtime > index.stat().st_mtime for path in inputs)
 
 

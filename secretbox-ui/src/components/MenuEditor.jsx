@@ -1,5 +1,6 @@
 
-export default function MenuEditor({ manualText, setManualText, setUpdateMessage, savingMenu, selectedShop, importFile, saveMenu }) {
+export default function MenuEditor({ manualText, setManualText, setUpdateMessage, savingMenu, selectedShop, importFile, saveMenu, isGuest }) {
+  if (isGuest) return <p className="volume-note">Sign in to upload or edit cafe menus.</p>;
   return (
     <details className="update-panel">
       <summary><span className="update-summary-icon">＋</span><span><strong>Update this menu</strong><small>Paste a list or upload the latest cafe price file.</small></span><span className="summary-arrow">⌄</span></summary>

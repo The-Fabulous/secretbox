@@ -3,7 +3,7 @@ import { getCategory } from '../categories';
 import MenuEditor from '../components/MenuEditor';
 import SlideTransition from '../components/SlideTransition';
 
-export default function CatalogPage({ shops, selectedShop, setMenuLoading, setMenuError, setSelectedShop, setSearch, setCategory, setUpdateMessage, visibleItems, menu, search, menuError, updateMessage, menuLoading, availableCategories, activeCategory, categoryCounts, sortState, toggleSort, sort, manualText, setManualText, savingMenu, importFile, saveMenu }) {
+export default function CatalogPage({ shops, selectedShop, setMenuLoading, setMenuError, setSelectedShop, setSearch, setCategory, setUpdateMessage, visibleItems, menu, search, menuError, updateMessage, menuLoading, availableCategories, activeCategory, categoryCounts, sortState, toggleSort, sort, manualText, setManualText, savingMenu, importFile, saveMenu, isGuest }) {
   return (
     <section className="content-panel">
       <div className="panel-heading">
@@ -135,6 +135,7 @@ export default function CatalogPage({ shops, selectedShop, setMenuLoading, setMe
       </div>
 
       <MenuEditor
+        isGuest={isGuest}
         manualText={manualText}
         setManualText={setManualText}
         setUpdateMessage={setUpdateMessage}

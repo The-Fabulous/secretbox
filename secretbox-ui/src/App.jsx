@@ -11,12 +11,13 @@ import './App.css';
 
 export default function App() {
   const workspace = useWorkspace();
-  if (!workspace.token) return <AuthPage {...workspace} />;
+  if (!workspace.token && !workspace.isGuest) return <AuthPage {...workspace} />;
 
   return (
     <div className="app-shell">
       <Topbar {...workspace} />
       <main className="dashboard">
+        {workspace.isGuest && <p className="notice guest-notice" role="status">Guest mode · Saved menus included with this version of SecretBox. Prices may have changed. Sign in to edit menus or use team chat.</p>}
         <Overview {...workspace} />
         <Navigation {...workspace} />
         <div className="view-stage">

@@ -30,7 +30,7 @@ def http_request(method, url, *, data=None, json=None, headers=None, timeout=5):
     with response:
         body = response.read().decode("utf-8")
         return SimpleNamespace(status_code=response.status, text=body,
-                               url=response.url, json=lambda: json_module.loads(body))
+                               url=response.url, headers=response.headers, json=lambda: json_module.loads(body))
 
 
 class SingleServiceTests(unittest.TestCase):
@@ -72,7 +72,8 @@ class SingleServiceTests(unittest.TestCase):
                 raise RuntimeError(cls.log.read())
             time.sleep(0.1)
         else:
-            raise RuntimeError("Server did not start")
+            cls.log.seek(0)
+            raise RuntimeError("Server did not start:\n" + cls.log.read())
         credentials = {"username": "tester", "password": "test-password"}
         assert http_request("POST", cls.url + "/register", json=credentials, timeout=5).status_code == 200
         response = http_request("POST", cls.url + "/login", json=credentials, timeout=5)
@@ -175,6 +176,26 @@ class SingleServiceTests(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         for path in ("/coffee-shops", "/menu/test", "/analytics/compare", "/chat"):
             self.assertEqual(http_request("GET", self.url + path).status_code, 401)
+
+    def test_pages_origin_can_sign_in(self):
+        response = http_request("OPTIONS", self.url + "/login", headers={
+            "Origin": "https://the-fabulous.github.io",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        })
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "https://the-fabulous.github.io")
+        rejected = http_request("OPTIONS", self.url + "/login", headers={
+            "Origin": "https://unrelated.example",
+            "Access-Control-Request-Method": "POST",
+        })
+        self.assertEqual(rejected.status_code, 400)
+
+    def test_guest_cannot_change_menus_or_read_chat(self):
+        self.assertEqual(http_request("PUT", self.url + "/menu/test",
+                                     json={"items": [{"name": "Tea", "price": 1}]}).status_code, 401)
+        self.assertEqual(http_request("GET", self.url + "/chat").status_code, 401)
+        self.assertEqual(http_request("POST", self.url + "/chat", json={"text": "Guest"}).status_code, 401)
 
 
 if __name__ == "__main__":

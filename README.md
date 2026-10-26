@@ -21,6 +21,8 @@ On the first start, the launcher installs frontend dependencies with `npm ci` if
 
 Open `http://127.0.0.1:8000/secretbox/` and create an account or sign in. API docs are at `http://127.0.0.1:8000/docs`. Press `Ctrl+C` to stop the service.
 
+You can also choose **Continue as guest** without entering credentials. Guest mode reads the bundled `objects/*_menu.json` snapshot and compares prices entirely in the browser, including on GitHub Pages when the API is unavailable. It shows a saved-menu notice; it does not claim these prices are live. Guest mode persists for the current browser tab and offers **Sign in** to return to authentication. Menu editing and team chat require an account.
+
 The launcher generates a temporary `SECRET_KEY` when none is set. Set a persistent `SECRET_KEY` in the environment to keep sessions valid across restarts.
 
 Host and port can be configured with `--host` / `--port` or the `HOST` / `PORT` environment variables. For example:
@@ -115,5 +117,9 @@ For optional frontend hot reload, run `npm.cmd run dev` in `secretbox-ui` alongs
 For a single-service deployment, build the frontend during deployment and run `python start.py --host 0.0.0.0`. Include `secretbox-ui/dist` in the deployment artifact. Node.js is unnecessary at runtime when the build is current. Persist the database and menu files across deployments.
 
 The existing GitHub Pages workflow remains an alternative static deployment. It sets `VITE_API_URL` to the separately hosted Python API; redeploy that API to include the new import endpoint. The normal local single-service build uses its own origin.
+
+For `https://the-fabulous.github.io/secretbox/`, select **Settings → Pages → Source → GitHub Actions** and run **Deploy website to GitHub Pages**. The optional repository variable `VITE_API_URL` overrides the Render API address. Changes to bundled menu JSON also trigger a Pages build.
+
+The API must be redeployed separately from GitHub Pages. On Render, use `pip install -r requirements.txt` as the build command and `uvicorn main:app --host 0.0.0.0 --port $PORT` as the start command for an API-only deployment. Set a persistent `SECRET_KEY`. If `CORS_ORIGINS` is configured there, include `https://the-fabulous.github.io` (the origin, without `/secretbox/`); otherwise the new default already allows it. Check `/health` and a browser preflight to `/login` after deployment. An old API without `/health` or one returning `Disallowed CORS origin` needs updating before account sign-in works from Pages.
 
 The old `price-updater/` Java source is retained as legacy code and is not used by the application.

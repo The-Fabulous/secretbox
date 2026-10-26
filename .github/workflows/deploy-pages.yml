@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'secretbox-ui/**'
+      - 'objects/*_menu.json'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -34,7 +35,7 @@ jobs:
       - name: Build website
         working-directory: secretbox-ui
         env:
-          VITE_API_URL: https://secretbox-main.onrender.com
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://secretbox-main.onrender.com' }}
         run: |
           npm ci
           npm run build

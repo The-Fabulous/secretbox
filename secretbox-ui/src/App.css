@@ -2,6 +2,26 @@
   min-height: 100vh;
 }
 
+.button.guest-submit {
+  width: 100%;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+}
+
+.guest-hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.guest-notice {
+  background: var(--surface, #fffdf9);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
 button,
 input,
 textarea {

@@ -1,6 +1,15 @@
 import { formatDate } from '../utils/format';
 
-export default function ChatPage({ chatError, chatMessages, sendChat, chatInput, setChatInput }) {
+export default function ChatPage({ chatError, chatMessages, sendChat, chatInput, setChatInput, isGuest, logout }) {
+  if (isGuest) return (
+    <section className="content-panel chat-panel">
+      <div className="empty-state">
+        <span aria-hidden="true">✉</span><h3>Join the team conversation</h3>
+        <p>Sign in to read and send messages.</p>
+        <button className="button button-primary" onClick={logout}>Sign in</button>
+      </div>
+    </section>
+  );
   return (
     <section className="content-panel chat-panel">
       <div className="panel-heading">
