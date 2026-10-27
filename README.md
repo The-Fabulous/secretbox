@@ -55,7 +55,7 @@ npm.cmd run dev
 ```
 
 Open the local URL printed by Vite. Optional frontend settings can be supplied through `VITE_API_URL` and `VITE_UPDATER_URL` before starting Vite.
-On first visit, choose **Create an account** to register, then sign in.
+Choose **Continue as guest** to browse the bundled cafe menus and compare prices without an account. The guest catalog is read-only; create an account and sign in to edit menus or use team chat. Guest menus are bundled from `objects` when the UI is built.
 
 ## Menu format
 
@@ -75,6 +75,28 @@ Tea | | 590
 ```
 
 Volumes may be entered in millilitres (`ml`/`мл`) or litres (`l`/`л`); litre values are converted to millilitres. Blank sizes remain unlisted. Price-list imports use the same line formats as the manual editor.
+
+## Update a SecretBox menu from screenshots
+
+The `driver` script can recognize a cafe menu from one or more screenshots and prepare a `.txt` draft in the format accepted by SecretBox. It does not publish changes or overwrite files in `objects`.
+
+Install the driver dependencies and set `OPENAI_API_KEY` in `driver\.env`:
+
+```powershell
+py -m pip install -r driver\requirements.txt
+notepad driver\.env
+```
+
+Set `OPENAI_API_KEY=...` in the `.env` file. `.env` files are ignored by Git.
+
+Pass one screenshot directly or put multiple screenshots for one cafe in a folder, then choose one mode:
+
+```powershell
+py driver\driver.py path\to\menu.png --secretbox-shop Ayu --menu-mode replace
+py driver\driver.py path\to\screenshots --secretbox-shop Ayu --menu-mode merge
+```
+
+`replace` creates a draft from the complete menu shown in the screenshots. `merge` updates matching drink names and sizes in the current menu and appends new ones; it cannot infer removals from a partial screenshot. Drafts are saved under `driver\output\secretbox-drafts\` by default. Review the generated file before uploading it in the signed-in site's **Update this menu → Upload .txt** control. Uploading a draft replaces the cafe menu with its contents, so use `replace` only when the screenshots show the complete menu. The site's Java updater and Python API must be running to upload it.
 
 ## API overview
 

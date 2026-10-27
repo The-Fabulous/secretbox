@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { CATEGORIES, categorize, getCategory } from './categories';
+import { GUEST_ANALYTICS, GUEST_MENUS, GUEST_SHOPS } from './guestData';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
@@ -48,6 +49,7 @@ function compareItems(a, b, key) {
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [isGuest, setIsGuest] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -74,6 +76,7 @@ function App() {
   function logout() {
     localStorage.removeItem('token');
     setToken('');
+    setIsGuest(false);
     setShops([]);
     setSelectedShop('');
     setMenu({ items: [], updated_at: '' });
@@ -214,7 +217,26 @@ function App() {
     return sort.dir === 'asc' ? 'ascending' : 'descending';
   }
 
-  const displayName = username || usernameFromToken(token);
+  const displayName = isGuest ? 'Guest' : username || usernameFromToken(token);
+
+  function enterGuestMode() {
+    const firstShop = GUEST_SHOPS[0] || '';
+    setIsGuest(true);
+    setShops(GUEST_SHOPS);
+    setSelectedShop(firstShop);
+    setMenu(GUEST_MENUS[firstShop] || { items: [], updated_at: '' });
+    setAnalytics(GUEST_ANALYTICS);
+    setMenuLoading(false);
+    setAnalyticsLoading(false);
+    setActiveView('catalog');
+  }
+
+  function showSignIn() {
+    setIsGuest(false);
+    setAuthMode('login');
+    setAuthMessage('');
+    setActiveView('catalog');
+  }
 
   async function submitAuth(event) {
     event.preventDefault();
@@ -297,11 +319,11 @@ function App() {
     ? [...new Set(analytics.flatMap((row) => Object.keys(row)))]
     : [];
 
-  if (!token) {
+  if (!token && !isGuest) {
     return (
       <main className="auth-page">
         <section className="auth-story">
-          <a className="brand" href="/" aria-label="SecretBox home">
+          <a className="brand" href={import.meta.env.BASE_URL} aria-label="SecretBox home">
             <span className="brand-mark">S</span>
             <span>secretbox<span className="brand-period">.</span></span>
           </a>
@@ -345,6 +367,14 @@ function App() {
                 {authMode === 'login' ? 'Sign in' : 'Create account'} <span aria-hidden="true">↗</span>
               </button>
             </form>
+            {authMode === 'login' && (
+              <>
+                <button className="button button-quiet auth-guest" type="button" onClick={enterGuestMode}>
+                  Continue as guest <span aria-hidden="true">→</span>
+                </button>
+                <p className="auth-browse-note">Browse saved cafe menus and compare prices. No account needed.</p>
+              </>
+            )}
             <p className="auth-switch">
               {authMode === 'login' ? 'New to SecretBox?' : 'Already have an account?'}
               <button
@@ -367,17 +397,24 @@ function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <a className="brand" href="/" aria-label="SecretBox home">
+        <a className="brand" href={import.meta.env.BASE_URL} aria-label="SecretBox home">
           <span className="brand-mark">S</span>
           <span>secretbox<span className="brand-period">.</span></span>
         </a>
         <div className="topbar-right">
-          <span className="user-chip"><span className="user-dot" />{displayName || 'Cafe team'}</span>
-          <button className="button button-quiet sign-out" onClick={logout}>Sign out <span aria-hidden="true">↗</span></button>
+          <span className="user-chip"><span className="user-dot" />{isGuest ? 'Guest' : displayName || 'Cafe team'}</span>
+          {isGuest
+            ? <button className="button button-quiet sign-out" onClick={showSignIn}>Sign in <span aria-hidden="true">↗</span></button>
+            : <button className="button button-quiet sign-out" onClick={logout}>Sign out <span aria-hidden="true">↗</span></button>}
         </div>
       </header>
 
       <main className="dashboard">
+        {isGuest && (
+          <p className="guest-banner" role="status">
+            Guest mode · Saved menus included with this version of SecretBox. Prices may have changed. Sign in to edit menus or use team chat.
+          </p>
+        )}
         <section className="welcome-row">
           <div>
             <p className="eyebrow">CAFE MENU INTELLIGENCE</p>
@@ -416,7 +453,7 @@ function App() {
             <span aria-hidden="true">▤</span> Cafe menus
           </button>
           <button className={activeView === 'analytics' ? 'view-tab active' : 'view-tab'} onClick={() => {
-            if (activeView !== 'analytics') setAnalyticsLoading(true);
+            if (!isGuest && activeView !== 'analytics') setAnalyticsLoading(true);
             setAnalyticsError('');
             setActiveView('analytics');
           }}>
@@ -448,6 +485,10 @@ function App() {
                       if (selectedShop !== shop) setMenuLoading(true);
                       setMenuError('');
                       setSelectedShop(shop);
+                      if (isGuest) {
+                        setMenu(GUEST_MENUS[shop] || { items: [], updated_at: '' });
+                        setMenuLoading(false);
+                      }
                       setSearch('');
                       setCategory('all');
                       setUpdateMessage('');
@@ -557,7 +598,9 @@ function App() {
               </div>
             </div>
 
-            <details className="update-panel">
+            {isGuest ? (
+              <p className="guest-edit-note">Sign in to upload or edit cafe menus.</p>
+            ) : <details className="update-panel">
               <summary><span className="update-summary-icon">＋</span><span><strong>Update this menu</strong><small>Paste a list or upload the latest cafe price file.</small></span><span className="summary-arrow">⌄</span></summary>
               <div className="update-tools">
                 <div className="update-instructions">
@@ -582,7 +625,7 @@ function App() {
                   {savingMenu ? 'Saving menu…' : 'Save menu'} <span aria-hidden="true">↗</span>
                 </button>
               </div>
-            </details>
+            </details>}
           </section>
         )}
 
@@ -629,19 +672,28 @@ function App() {
               </div>
               <span className="live-badge"><span /> LIVE</span>
             </div>
-            {chatError && <p className="notice notice-error">{chatError}</p>}
-            <div className="chat-feed">
-              {chatMessages.length ? chatMessages.map((message, index) => (
-                <article className="chat-bubble" key={`${message.timestamp}-${index}`}>
-                  <div><strong>{message.username}</strong><time>{formatDate(`${message.timestamp}Z`)}</time></div>
-                  <p>{message.text}</p>
-                </article>
-              )) : <div className="empty-state"><span>✉</span><h3>Start the conversation</h3><p>Share a menu update or a note with your team.</p></div>}
-            </div>
-            <form className="chat-form" onSubmit={sendChat}>
-              <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="Write a message…" aria-label="Chat message" />
-              <button className="button button-primary" type="submit">Send <span aria-hidden="true">↗</span></button>
-            </form>
+            {isGuest ? (
+              <div className="empty-state guest-chat">
+                <span aria-hidden="true">✉</span>
+                <h3>Join the team conversation</h3>
+                <p>Sign in to read and send messages.</p>
+                <button className="button button-primary" type="button" onClick={showSignIn}>Sign in</button>
+              </div>
+            ) : <>
+              {chatError && <p className="notice notice-error">{chatError}</p>}
+              <div className="chat-feed">
+                {chatMessages.length ? chatMessages.map((message, index) => (
+                  <article className="chat-bubble" key={`${message.timestamp}-${index}`}>
+                    <div><strong>{message.username}</strong><time>{formatDate(`${message.timestamp}Z`)}</time></div>
+                    <p>{message.text}</p>
+                  </article>
+                )) : <div className="empty-state"><span>✉</span><h3>Start the conversation</h3><p>Share a menu update or a note with your team.</p></div>}
+              </div>
+              <form className="chat-form" onSubmit={sendChat}>
+                <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="Write a message…" aria-label="Chat message" />
+                <button className="button button-primary" type="submit">Send <span aria-hidden="true">↗</span></button>
+              </form>
+            </>}
           </section>
         )}
 

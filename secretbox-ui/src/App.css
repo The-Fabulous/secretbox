@@ -140,6 +140,16 @@ button {
   padding: 50px 0 28px;
 }
 
+.guest-banner {
+  margin: 8px 0 12px;
+  padding: 10px 16px;
+  color: #777067;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 11px;
+}
+
 .welcome-row {
   min-height: 145px;
   display: flex;
@@ -1171,6 +1181,19 @@ button {
   margin-top: 5px;
 }
 
+.auth-guest {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.auth-browse-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .form-message {
   margin: -2px 0 0;
   color: #a55343;
@@ -1203,6 +1226,16 @@ button {
 .secure-note > span {
   margin-right: 5px;
   color: #7e997f;
+}
+
+.guest-edit-note {
+  margin: 15px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.guest-chat .button {
+  margin-top: 14px;
 }
 
 @keyframes arrive {
